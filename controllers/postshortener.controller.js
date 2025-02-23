@@ -9,6 +9,8 @@ export const getShortenerPage = async (req, res) => {
   try {
     // const file = await readFile(path.join("views", "index.html"));
     // const links = await loadLinks();
+
+  
     const links = await getAllShortLinks();
 
     // let isLoggedIn = req.headers.cookie;
