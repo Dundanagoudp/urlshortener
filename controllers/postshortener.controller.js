@@ -7,6 +7,13 @@ import {
 
 export const getShortenerPage = async (req, res) => {
   try {
+<<<<<<< HEAD
+=======
+    // const file = await readFile(path.join("views", "index.html"));
+    // const links = await loadLinks();
+
+  
+>>>>>>> 7113d2efafd424b5cab730cce85bc138b88dadaf
     const links = await getAllShortLinks();
 
     return res.render("index", { links, host: req.host });

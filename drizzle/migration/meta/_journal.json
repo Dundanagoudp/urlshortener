@@ -15,6 +15,20 @@
       "when": 1739360691055,
       "tag": "0001_confused_molten_man",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1740190966923,
+      "tag": "0002_harsh_otto_octavius",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1740310066399,
+      "tag": "0003_pink_mesmero",
+      "breakpoints": true
     }
   ]
 }

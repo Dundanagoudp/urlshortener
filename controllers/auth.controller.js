@@ -68,12 +68,17 @@ export const postLogin = async (req, res) => {
 // Do You Need to Set Path=/ Manually?
 //    ✅ cookie-parser and Express automatically set the path to / by default.
 
-export const getMe = (req, res) => {
-  if (!req.user) return res.send("Not logged in");
-  return res.send(`<h1>Hey ${req.user.name} - ${req.user.email}</h1>`);
-};
 
-export const logoutUser = (req, res) => {
-  res.clearCookie("access_token");
-  res.redirect("/login");
-};
+// export const getRegisterPage = (req, res) => {
+//   return res.render("../views/auth/register");
+// };
+
+// export const getLoginPage = (req, res) => {
+//   return res.render("auth/login");
+// };
+
+// export const postLogin = async (req, res) => {
+//   // res.setHeader("Set-Cookie", "isLoggedIn=true, Path=/");
+//   res.cookie("isLoggedIn", true);
+//   res.redirect("/");
+// };
