@@ -45,6 +45,8 @@ router.route("/github").get(authControllers.getGithubLoginPage);
 
 router.route("/github/callback").get(authControllers.getGithubLoginCallback);
 
+router.route("/set-password").get(authControllers.getSetPasswordPage).post(authControllers.postSetPassword);
+
 router.route("/logout").get(authControllers.logoutUser);
 
 export const authRoutes = router;

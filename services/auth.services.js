@@ -625,3 +625,5 @@ export async function createGithubUserWithOauthId({
 
   return user;
 }
+
+// updateUserPassword

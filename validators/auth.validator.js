@@ -49,11 +49,14 @@ export const forgotPasswordSchema = z.object({
   email:emailSchema
 })
 
-
-export const verifyResetPasswordSchema = z.object({
+const passwordSchema = z.object({
   newPassword: z.string().trim().min(6, { message: "Password must be at least 6 characters long" }).max(100, { message: "Password must be at most 100 characters long" }),
  confirmPassword: z.string().trim().min(6, { message: "Password must be at least 6 characters long" }).max(100, { message: "Password must be at most 100 characters long" }),
 }).refine((data) => data.newPassword === data.confirmPassword, {
   message: "Passwords do not match",
   path: ["confirmPassword"],
 })
+
+
+export const verifyResetPasswordSchema = passwordSchema;
+export const setPasswordSchema = passwordSchema;

@@ -29,7 +29,7 @@ import {
   createGithubUserWithOauthId,
   createUserWithOauthId,
 } from "../services/auth.services.js";
-import { registerUserSchema, loginUserSchema, verifyEmailSchema, verifyPasswordSchema, forgotPasswordSchema, verifyResetPasswordSchema } from "../validators/auth.validator.js";
+import { registerUserSchema, loginUserSchema, verifyEmailSchema, verifyPasswordSchema, forgotPasswordSchema, verifyResetPasswordSchema, setPasswordSchema } from "../validators/auth.validator.js";
 import { ACCESS_TOKEN_EXPIRY, OAUTH_EXCHANGE_EXPIRY, REFRESH_TOKEN_EXPIRY } from "../config/constants.js";
 import { name } from "ejs";
 import { eq, is } from "drizzle-orm";
@@ -40,6 +40,7 @@ import { getHtmlFromMjmlTemplate } from "../lib/get-html-from-mjml-template.js";
 import { decodeIdToken, generateCodeVerifier, generateState, Google } from "arctic";
 import { google } from "../lib/oauth/google.js";
 import { github } from "../lib/oauth/github.js";
+import prisma from "@prisma/client";
 
 export const getRegisterPage = (req, res) => {
   if (req.user) return res.redirect("/");
@@ -66,7 +67,6 @@ export const postRegister = async (req, res) => {
 
   const hashedPassword = await hashPassword(password);
   const [user] = await createUser({ name, email, password: hashedPassword });
-
   // res.redirect("/login");
   await authenticateUser({
     req, res, user, name, email
@@ -180,11 +180,12 @@ export const getProfilePage = async (req, res) => {
         name  : user.name,
         email : user.email,
         isEmailValid : user.isEmailValid,
+        hasPassword : Boolean(user.password),
         createdAt : user.createdAt,
         links: userShortLinks,
       }
-    })
-}
+    });
+};
 
 
 //getChangePasswordPage
@@ -657,3 +658,42 @@ export const getGithubLoginCallback = async (req, res) => {
 
 
 }
+
+
+// getSetPasswordPage
+
+export const getSetPasswordPage = (req, res) => {
+  if (!req.user) return res.redirect("/");
+  return res.render("auth/set-password", { error: req.flash("error") });
+
+}
+
+// postSetPassword
+
+export const postSetPassword = async (req, res) => {
+
+  const {data , error} =setPasswordSchema.safeParse(req.body);
+
+
+  if (error) {
+    const errorMessages = error.errors.map((err) => err.message);
+    req.flash("error", errorMessages[0]);
+    return res.redirect("/set-password");
+  }
+
+  const { newPassword, confirmPassword } = data;
+
+  const user = await findUserById(req.user.id);
+
+  if(user.password) {
+    req.flash("error", "User already has a password set");
+    return res.redirect("/set-password");
+  }
+
+ await updateUserPassword({userId:user.id, newPassword});
+
+ 
+  return res.redirect("/profile");
+
+
+  };
