@@ -20,11 +20,11 @@ export const usersTable = mysqlTable("users", {
   id: int().autoincrement().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
   email: varchar("email", { length: 255 }).notNull().unique(),
-  password: varchar("password", { length: 255 }).notNull(),
+  password: varchar("password", { length: 255 }),
   isEmailValid: boolean().default(false).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
-});
+});  
 
 // passwordResetToken Table
 export const passwordResetTokenTable = mysqlTable("password_reset_token", {

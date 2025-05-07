@@ -27,6 +27,7 @@ import {
   getGithubUserWithOauthId,
   linkGithubUserWithOauthId,
   createGithubUserWithOauthId,
+  createUserWithOauthId,
 } from "../services/auth.services.js";
 import { registerUserSchema, loginUserSchema, verifyEmailSchema, verifyPasswordSchema, forgotPasswordSchema, verifyResetPasswordSchema } from "../validators/auth.validator.js";
 import { ACCESS_TOKEN_EXPIRY, OAUTH_EXCHANGE_EXPIRY, REFRESH_TOKEN_EXPIRY } from "../config/constants.js";
@@ -453,74 +454,7 @@ export const getGoogleLoginPage =async(req, res) => {
 }
 
 
-// getGoogleLoginCallback
 
-// export const getGoogleLoginCallback = async (req, res) => {
-//   const { state, code } = req.query;
-
-//   console.log("state", state);  
-//   console.log("code", code);
-
-//   const {
-//     google_oauth_state:storedState,
-//     google_oauth_code_verifier:codeVerifier,
-//   } = req.cookies;
-
-//   if(
-//     !code ||
-//     !state ||
-//     !storedState ||
-//     !codeVerifier ||
-//     state !== storedState
-//   ) {
-//     req.flash("error", "Invalid or expired state parameter");
-//     return res.redirect("/login");
-//   }
-//   console.log("token google", tokens);
-  
-//   const claims = decodeIdToken(tokens.idToken());
-//   const {sub: googleUserId, email, name} = claims;
-//   console.log("googleID", googleID);
-
-// //if user is alresy linked then we will getteh user
-
-// let user = await getUserWithOauthId({
-//   provider: "google",
-//   email,
-// });
-
-// //user exitss but is not linked with outh
-
-// if(user && !user.providerAccountId) {
-//   await linkUserWithOauthId({
-//     provider: "google",
-//     providerAccountId: googleUserId,
-//     userId: user.id,
-//   });
-// }
-
-// // if user doesnt exit 
-
-// if(!user) {
-//   user = await createUserWithOauthId({
-//     name,
-//     email,
-//     provider: "google",
-//     providerAccountId: googleUserId,
-//   });
-  
-// }
-
-// await authenticateUser({
-//   req,
-//   res,
-//   user,
-//   name,
-//   email,
-// });
-// res.redirect("/");
-
-// }
 
 export const getGoogleLoginCallback = async (req, res) => {
   const { state, code } = req.query;

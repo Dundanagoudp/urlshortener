@@ -507,21 +507,51 @@ export async function linkUserWithOauthId({
   });
 }
 
-export async function  createUserWithOauthId({
+// export async function  createUserWithOauthId({
+//   name,
+//   email,
+//   providerAccountId,
+//   provider,
+// }) {
+//   const user = await db.transaction(async(trx)=>{
+//     const [user] = await trx
+//     .insert(usersTable)
+//     .values({
+//       name,
+//       email,
+//       isEmailValid: false,
+//     })
+//     .$returningId();
+    
+//     await trx.insert(oAuthAccountsTable).values({
+//       userId: user.id,
+//       providerAccountId,
+//       provider,
+//     });
+//     return user;
+//   })
+  
+// }
+  
+// getUserWithOauthId
+
+
+export async function createUserWithOauthId({
   name,
   email,
   providerAccountId,
   provider,
 }) {
-  const user = await db.transaction(async(trx)=>{
+  const user = await db.transaction(async(trx) => {
     const [user] = await trx
-    .insert(usersTable)
-    .values({
-      name,
-      email,
-      isEmailValid: false,
-    })
-    .$returningId();
+      .insert(usersTable)
+      .values({
+        name,
+        email,
+        password: null, // Explicitly set to null for OAuth users
+        isEmailValid: true, // Set to true since Google verifies emails
+      })
+      .$returningId();
     
     await trx.insert(oAuthAccountsTable).values({
       userId: user.id,
@@ -529,11 +559,9 @@ export async function  createUserWithOauthId({
       provider,
     });
     return user;
-  })
-  
+  });
+  return user;
 }
-  
-// getUserWithOauthId
 
 export const getGithubUserWithOauthId = async ({ email, provider }) => {
   const [user] = await db
