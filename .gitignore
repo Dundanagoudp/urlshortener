@@ -38,6 +38,8 @@ jspm_packages/
 
 # Coverage reports
 coverage/
-
+.env
 # Miscellaneous
 !.gitkeep
+.gitignore
+.env

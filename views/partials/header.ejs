@@ -3,24 +3,34 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>URL Shortener</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-      <ul class="navbar-links">
-        <li><a href="/">Home</a></li>
-        <li><a href="#section2">About</a></li>
-        <li><a href="#section4">Contact</a></li>
+  <body class="bg-gray-100">
+    <header class="bg-gray-800 text-white p-4">
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold">URL Shortener</h1>
+        <nav>
+          <ul class="flex space-x-4">
+            <li><a href="/" class="hover:text-gray-300">Home</a></li>
+            <li><a href="#" class="hover:text-gray-300">About</a></li>
+            <li><a href="#" class="hover:text-gray-300">Contact</a></li>
+            <% if (user) { %>
+            <li><a href="/profile" class="hover:text-gray-300">Profile</a></li>
+            <li><a href="/logout" class="hover:text-gray-300">Logout</a></li>
+            <% } else { %>
+            <li><a href="/login" class="hover:text-gray-300">Login</a></li>
+            <li><a href="/register" class-="hover:text-gray-300">Register</a></li>
+            <% } %>
+          </ul>
+        </nav>
+      </div>
+    </header>
 
-        <% if (!user) { %>
-        <a href="/login">Login</a>
-        <a href="/register">Register</a>
-        <% } else { %>
-        <a href="/logout">Logout</a>
-        <% } %>
-      </ul>
-    </nav>
+    <div class="container mx-auto mt-10">
+      <h1 class="text-4xl font-bold text-center text-gray-800">
+        Welcome to the URL Shortener
+      </h1>
+    </div>
   </body>
 </html>

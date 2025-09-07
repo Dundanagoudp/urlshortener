@@ -18,6 +18,35 @@ router
   .post(authControllers.postLogin);
 
 router.route("/me").get(authControllers.getMe);
+
+router.route("/profile").get(authControllers.getProfilePage);
+
+router.route("/verify-email").get(authControllers.getVerifyEmailPage);
+
+router.route("/resend-verification-link").post(authControllers.resendVerificationLink);
+
+router
+  .route("/verify-email-token")
+  .get(authControllers.verifyEmailToken)
+
+router.route("/edit-profile").get(authControllers.getEditProfilePage).post(authControllers.postEditProfile);
+
+router.route("/change-password").get(authControllers.getChangePasswordPage).post(authControllers.postChangePassword);
+
+router.route("/reset-password").get(authControllers.getResetPasswordPage).post(authControllers.postForgotPassword);
+
+router.route("/reset-password/:token").get(authControllers.getResetPasswordTokenPage).post(authControllers.postResetPasswordToken);
+
+router.route("/google").get(authControllers.getGoogleLoginPage);
+
+router.route("/google/callback").get(authControllers.getGoogleLoginCallback);
+
+router.route("/github").get(authControllers.getGithubLoginPage);
+
+router.route("/github/callback").get(authControllers.getGithubLoginCallback);
+
+router.route("/set-password").get(authControllers.getSetPasswordPage).post(authControllers.postSetPassword);
+
 router.route("/logout").get(authControllers.logoutUser);
 
 export const authRoutes = router;

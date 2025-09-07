@@ -3,55 +3,197 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="style.css" />
-    <!-- <script src="https://cdn.tailwindcss.com"></script> -->
-    <title>Document</title>
+    <title>URL Shortener</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+      integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   </head>
+  <body class="bg-gray-100">
+    <%- include('partials/header') %>
 
-  <body>
-    <%- include('./partials/header.ejs') %> <% if(user) { %>
-    <h2>You are logged In</h2>
-    <% } else { %>
-    <h2>You are not logged In</h2>
-    <% } %>
+    <main class="container mx-auto mt-10 px-4">
+      <div class="text-center">
+        <% if (user) { %>
+        <p class="text-lg text-gray-700">Welcome, <%= user.name %>!</p>
+        <% } else { %>
+        <p class="text-lg text-gray-700">Welcome, Guest!</p>
+        <% } %>
+      </div>
 
-    <div class="container">
-      <h1>URL Shortener</h1>
-      <form action="/" method="post">
-        <div>
-          <label for="url">Enter URL:</label>
-          <input type="url" name="url" id="url" required />
+      <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">
+          URL Shortener
+        </h1>
+
+        <% if (error && error.length > 0) { %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <strong class="font-bold">Error!</strong>
+          <span class="block sm:inline"><%= error %></span>
         </div>
-        <div>
-          <label for="shortCode">Enter shortCode:</label>
-          <input type="text" name="shortCode" id="shortCode" required />
+        <% } %>
+
+        <form action="/" method="post">
+          <div class="mb-4">
+            <label for="long_url" class="block text-gray-700 font-medium mb-2"
+              >Enter Long URL</label
+            >
+            <input
+              type="url"
+              name="long_url"
+              id="long_url"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="https://example.com"
+              required
+            />
+          </div>
+          <div class="mb-4">
+            <label for="short_code" class="block text-gray-700 font-medium mb-2"
+              >Custom Short Code (Optional)</label
+            >
+            <input
+              type="text"
+              name="short_code"
+              id="short_code"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="my-custom-link"
+            />
+          </div>
+          <button
+            type="submit"
+            class="w-full bg-blue-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+          >
+            Shorten
+          </button>
+        </form>
+      </div>
+
+      <div class="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-md mt-10">
+        <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">
+          Shortened URLs
+        </h2>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white">
+            <thead class="bg-gray-800 text-white">
+              <tr>
+                <th class="py-3 px-4 uppercase font-semibold text-sm">
+                  Original URL
+                </th>
+                <th class="py-3 px-4 uppercase font-semibold text-sm">
+                  Short URL
+                </th>
+                <th class="py-3 px-4 uppercase font-semibold text-sm">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="text-gray-700">
+              <% links.forEach(link => { %>
+              <tr>
+                <td class="py-3 px-4 border-b border-gray-200">
+                  <a
+                    href="<%= link.long_url %>"
+                    target="_blank"
+                    class="text-blue-500 hover:underline"
+                    ><%= link.long_url.length > 50 ? link.long_url.slice(0, 50) +
+                    '...' : link.long_url %></a
+                  >
+                </td>
+                <td class="py-3 px-4 border-b border-gray-200">
+                  <a
+                    href="/<%= link.short_code %>"
+                    target="_blank"
+                    class="text-blue-500 hover:underline"
+                    >http://<%= host %>/<%= link.short_code %></a
+                  >
+                </td>
+                <td class="py-3 px-4 border-b border-gray-200">
+                  <button
+                    class="bg-blue-500 text-white font-bold py-1 px-3 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 mr-2"
+                    onclick="copyToClipboard('http://<%= host %>/<%= link.short_code %>')"
+                  >
+                    <i class="fas fa-copy"></i>
+                  </button>
+                  <a
+                    href="/edit/<%= link.id %>"
+                    class="bg-yellow-500 text-white font-bold py-1 px-3 rounded-lg hover:bg-yellow-600 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 mr-2"
+                  >
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <a
+                    href="/delete/<%= link.id %>"
+                    class="bg-red-500 text-white font-bold py-1 px-3 rounded-lg hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+                  >
+                    <i class="fas fa-trash"></i>
+                  </a>
+                </td>
+              </tr>
+              <% }) %>
+            </tbody>
+          </table>
         </div>
-        <button type="submit">Shorten</button>
-      </form>
 
-      <h2>Shortened URLs</h2>
-      <ul>
-        <!-- {{ shortened_urls }} -->
+        <!-- Pagination -->
+        <div class="flex justify-center mt-6">
+          <nav class="flex items-center space-x-2">
+            <a
+              href="#"
+              class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+              >Previous</a
+            >
+            <a
+              href="#"
+              class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+              >1</a
+            >
+            <a
+              href="#"
+              class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+              >2</a
+            >
+            <a
+              href="#"
+              class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+              >3</a
+            >
+            <a
+              href="#"
+              class="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+              >Next</a
+            >
+          </nav>
+        </div>
+      </div>
+    </main>
 
-        <!-- Object.entries(links) .map(([shortCode, url]) => { url = url.length >=
-        30 ? `${url.slice(0, 30)}...` : url; return `
-        <li>
-          <a href="/${shortCode}" target="_blank">$host}/${shortCode}</a> -
-          ${url}
-        </li>
-        `; }) .join("") -->
+    <%- include('partials/footer') %>
 
-        <% links.map(({shortCode, url}) => { %> <% const truncatedUrl =
-        url.length >= 30 ? `${url.slice(0,30)}...` : url %>
-
-        <li>
-          <a href="/<%= shortCode %>" target="_blank">
-            <%= host %>/<%= shortCode %>
-          </a>
-          - <%= truncatedUrl %>
-        </li>
-        <% })%>
-      </ul>
-    </div>
+    <script>
+      function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(
+          function () {
+            Swal.fire({
+              icon: "success",
+              title: "Copied!",
+              text: "URL copied to clipboard",
+              timer: 1500,
+              showConfirmButton: false,
+            });
+          },
+          function (err) {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: "Something went wrong!",
+            });
+          }
+        );
+      }
+    </script>
   </body>
 </html>
